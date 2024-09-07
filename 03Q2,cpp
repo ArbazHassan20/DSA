@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+
+class ListNode {
+    int value;
+    ListNode* nextNode;
+public:
+    ListNode() : value(0), nextNode(NULL) {}
+    ListNode(int val) : value(val), nextNode(NULL) {}
+    friend class LinkedList;
+};
+
+class LinkedList {
+    ListNode* headNode;
+public:
+    LinkedList() : headNode(NULL) {}
+
+    void appendToTail(int val) {
+        ListNode* newNode = new ListNode(val);
+        if (headNode == NULL) {
+            headNode = newNode;
+        } else {
+            ListNode* current = headNode;
+            while (current->nextNode != NULL) {
+                current = current->nextNode;
+            }
+            current->nextNode = newNode;
+        }
+    }
+
+    void reverseList() {
+        ListNode* previousNode = NULL;
+        ListNode* currentNode = headNode;
+        ListNode* nextNode = NULL;
+        while (currentNode != NULL) {
+            nextNode = currentNode->nextNode;  
+            currentNode->nextNode = previousNode;  
+            previousNode = currentNode;        
+            currentNode = nextNode;        
+        }
+        headNode = previousNode; 
+    }
+
+    void displayList() {
+        ListNode* current = headNode;
+        while (current != NULL) {
+            cout << current->value << " ";
+            current = current->nextNode;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    LinkedList myList;
+    myList.appendToTail(10);
+    myList.appendToTail(20);
+    myList.appendToTail(30);
+    myList.appendToTail(40);
+    myList.appendToTail(50);
+
+    cout << "Original list: ";
+    myList.displayList();
+
+    myList.reverseList();
+    cout << "Reversed list: ";
+    myList.displayList();
+
+    return 0;
+}
