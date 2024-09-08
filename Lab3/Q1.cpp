@@ -1,135 +1,184 @@
 #include "iostream"
 using namespace std;
 
-class ListNode{
-    int value;
-    ListNode* nextNode;
-    
-    public:
-    ListNode():value(0), nextNode(NULL){}
-    ListNode(const int val): value(val), nextNode(NULL){}
-    
-    friend class LinkedList;
+class Node {
+    int data;
+    Node* next;
+
+public:
+    Node() : data(0), next(NULL) {}
+    Node(const int d) : data(d), next(NULL) {}
+
+    friend class SLL; // Granting access to SLL class
 };
 
-class LinkedList{
-    ListNode* headNode;
-    
-    public:
-    LinkedList():headNode(NULL){}
-    LinkedList(ListNode* node): headNode(node){}
-    
-    void addAtFront(const int val){
-        ListNode* newNode = new ListNode(val);
-        if(headNode == NULL) headNode = newNode;
-        else{
-            newNode->nextNode = headNode;
-            headNode = newNode;
+class SLL {
+    Node* head;
+
+public:
+    SLL() : head(NULL) {}
+    SLL(Node* n) : head(n) {}
+
+    // Insertion at the front of the list
+    void insertAtFront(const int val) {
+        Node* newNode = new Node(val);
+        if (head == NULL)
+            head = newNode;
+        else {
+            newNode->next = head;
+            head = newNode;
         }
     }
 
-    void addAtEnd(const int val){
-        ListNode* newNode = new ListNode(val);
-        if(headNode == NULL) headNode = newNode;
-        else{
-            ListNode* current = headNode;
-            while(current->nextNode != NULL){
-                current = current->nextNode;
+    // Insertion at the tail of the list
+    void insertAtTail(const int val) {
+        Node* newNode = new Node(val);
+        if (head == NULL) 
+            head = newNode;
+        else {
+            Node* current = head;
+            while (current->next != NULL) 
+                current = current->next;
+            current->next = newNode;
+        }
+    }
+
+    // Insert a node after a given value
+    void InsertAfterValue(const int value, const int insertingValue) {
+        Node* newNode = new Node(insertingValue);
+        if (head == NULL) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->data != value) {
+                current = current->next;
             }
-            current->nextNode = newNode;
+            Node* temp = current->next;
+            current->next = newNode;
+            newNode->next = temp;
         }
     }
 
-    void addAfterValue(const int targetValue, const int insertValue){
-        ListNode* newNode = new ListNode(insertValue);
-        if(headNode == NULL){
-            headNode = newNode;
-        }
-        else{
-            ListNode* current = headNode;
-            while(current->value != targetValue){
-                current = current->nextNode;
+    // Insert a node before a given value
+    void InsertBeforeValue(const int value, const int insertingValue) {
+        Node* newNode = new Node(insertingValue);
+        if (head == NULL) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->next->data != value) {
+                current = current->next;
             }
-            ListNode* temp = current->nextNode;
-            current->nextNode = newNode;
-            newNode->nextNode = temp;
+            newNode->next = current->next;
+            current->next = newNode;
         }
     }
 
-    void addBeforeValue(const int targetValue, const int insertValue){
-        ListNode* newNode = new ListNode(insertValue);
-        if(headNode == NULL){
-            headNode = newNode;
-        }
-        else{
-            ListNode* current = headNode;
-            while(current->nextNode->value != targetValue){
-                current = current->nextNode;
-            }
-            newNode->nextNode = current->nextNode;
-            current->nextNode = newNode;
-        }
-    }
-
-    int countNodes(){
+    // Count the number of nodes
+    int numNodes() {
         int count = 0;
-        ListNode* current = headNode;
-        while(current != NULL){
+        Node* current = head;
+        while (current != NULL) {
             count++;
-            current = current->nextNode;
+            current = current->next;
         }
         return count;
     }
 
-    void removeFromFront(){
-        if(headNode != NULL){
-            ListNode* temp = headNode;
-            headNode = temp->nextNode;
+    // Delete the head node
+    void deleteFromHead() {
+        if (head != NULL) {
+            Node* temp = head;
+            head = temp->next;
             delete temp;
-        }
-        else{
-            cout << "The list is empty" << endl;
+        } else {
+            cout << "Linked list is empty" << endl;
         }
     }
 
-    void removeFromEnd(){
-        if(headNode != NULL){
-            ListNode* current = headNode;
-            while(current->nextNode->nextNode != NULL){
-                current = current->nextNode;
+    // Delete the tail node
+    void deleteFromTail() {
+        if (head != NULL) {
+            Node* current = head;
+            while (current->next->next != NULL) {
+                current = current->next;
             }
-            delete current->nextNode;
-            current->nextNode = NULL;
-        }
-        else{
-            cout << "The list is empty" << endl;
+            delete current->next;
+            current->next = NULL;
+        } else {
+            cout << "Linked list is empty" << endl;
         }
     }
 
-    void removeValue(const int targetValue){
-        if (headNode == NULL){
-            cout << "The list is empty" << endl;
+    // Delete a node by value
+    void deleteValue(const int value) {
+        if (head == NULL) {
+            cout << "Linked list is empty" << endl;
             return;
         }
-        ListNode* current = headNode;
-        while(current->nextNode->value != targetValue){
-            current = current->nextNode;
+        Node* current = head;
+        while (current->next->data != value) {
+            current = current->next;
         }
-        ListNode* temp = current->nextNode;
-        current->nextNode = temp->nextNode;
+        Node* temp = current->next;
+        current->next = current->next->next;
         delete temp;
     }
 
-    void displayList(){
-        ListNode* current = headNode;
-        while(current != NULL){
-            cout << current->value << " ";
-            current = current->nextNode;
+    // Print the list
+    void printList() {
+        Node* current = head;
+        while (current != NULL) {
+            cout << current->data << " ";
+            current = current->next;
         }
+        cout << endl;
     }
 };
 
 int main() {
-    LinkedList list;
-    
-   
+    SLL list;
+
+    // Inserting elements at the front
+    list.insertAtFront(10);
+    list.insertAtFront(20);
+    list.insertAtFront(30);
+    cout << "After inserting at front:" << endl;
+    list.printList();
+
+    // Inserting elements at the tail
+    list.insertAtTail(40);
+    list.insertAtTail(50);
+    list.insertAtTail(60);
+    cout << "\nAfter inserting at tail:" << endl;
+    list.printList();
+
+    cout << "\nTotal nodes in the list: " << list.numNodes() << endl;
+
+    // Deleting from head
+    list.deleteFromHead();
+    cout << "\nAfter deleting from head:" << endl;
+    list.printList();
+
+    // Deleting from tail
+    list.deleteFromTail();
+    cout << "\nAfter deleting from tail:" << endl;
+    list.printList();
+
+    // Deleting a node by value
+    list.deleteValue(40);
+    cout << "\nAfter deleting value 40:" << endl;
+    list.printList();
+
+    // Inserting after value 20
+    list.InsertAfterValue(20, 11);
+    cout << "\nInserted value 11 after 20:" << endl;
+    list.printList();
+
+    // Inserting before value 50
+    list.InsertBeforeValue(50, 22);
+    cout << "\nInserted value 22 before 50:" << endl;
+    list.printList();
+
+    return 0;
+}
