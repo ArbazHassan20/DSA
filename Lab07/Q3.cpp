@@ -81,13 +81,13 @@ private:
 int main() {
     StudentList studentList;
 
-    studentList.addStudent("Alice", 85);
-    studentList.addStudent("Bob", 90);
-    studentList.addStudent("Charlie", 72);
-    studentList.addStudent("David", 100);
-    studentList.addStudent("Eva", 65);
-    studentList.addStudent("Frank", 55);
-    studentList.addStudent("Grace", 78);
+    studentList.addStudent("Ali", 87);
+    studentList.addStudent("Bilal", 90);
+    studentList.addStudent("Chawala", 74);
+    studentList.addStudent("Daniyal", 100);
+    studentList.addStudent("Elvish", 60);
+    studentList.addStudent("Farhad", 45);
+    studentList.addStudent("Galib", 88);
 
     cout << "Student scores before sorting:\n";
     studentList.display();
