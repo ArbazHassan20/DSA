@@ -1,0 +1,65 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <memory>
+
+using namespace std;
+
+class TreeNode {
+    int val;
+    unique_ptr<TreeNode> left;
+    unique_ptr<TreeNode> right;
+
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+void serialize(const unique_ptr<TreeNode>& root, ostringstream& out) {
+    if (!root) {
+        out << "## "; // for null nodes
+        return;
+    }
+    out << root->val << " ";
+    serialize(root->left, out);
+    serialize(root->right, out);
+}
+
+
+string serializeTree(const unique_ptr<TreeNode>& root) {
+    ostringstream out;
+    serialize(root, out);
+    return out.str();
+}
+
+unique_ptr<TreeNode> deserialize(istringstream& in) {
+    string val;
+    in >> val;
+    if (val == "#") return nullptr;
+
+    auto node = make_unique<TreeNode>(stoi(val));
+    node->left = deserialize(in);
+    node->right = deserialize(in);
+
+    return node;
+}
+
+unique_ptr<TreeNode> deserializeTree(const string& data) {
+    istringstream in(data);
+    return deserialize(in);
+}
+
+int main() {
+    // Create a simple binary tree
+    auto root = make_unique<TreeNode>(2);
+    root->left = make_unique<TreeNode>(3);
+    root->right = make_unique<TreeNode>(4);
+    root->left->left = make_unique<TreeNode>(5);
+    root->left->right = make_unique<TreeNode>(6);
+
+    string serializedTree = serializeTree(root);
+    cout << "Serialized Tree: " << serializedTree << endl;
+
+    unique_ptr<TreeNode> deserializedRoot = deserializeTree(serializedTree);
+    cout << "Tree Deserialized Successfully." << endl;
+
+    return 0;
+}
